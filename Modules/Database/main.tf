@@ -11,7 +11,7 @@ resource "aws_security_group" "database_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = var.app_sg
+    security_groups = [var.app_sg]
   }
   
    egress {
@@ -32,22 +32,22 @@ resource "aws_security_group" "database_sg" {
 }
 
 #Create database
-resource "aws_db_instance" "default" {
+resource "aws_db_instance" "week22db" {
   allocated_storage      = 10
-  db_subnet_group_name   = aws_db_subnet_group.default.id
+  db_subnet_group_name   = aws_db_subnet_group.week22db.id
   engine                 = "mysql"
   engine_version         = "8.0.20"
   instance_class         = "db.t2.micro"
   multi_az               = false
-  name                   = "mydb"
+  name                   = "db_name"
   username               = "username"
   password               = "password"
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.database_sg.id]
 }
 
-resource "aws_db_subnet_group" "default" {
-  name       = "main"
+resource "aws_db_subnet_group" "week22db" {
+  name       = "week22db"
   subnet_ids = var.database_subnet
 
   tags = {
